@@ -541,6 +541,47 @@ class LeadSheet2PerfProblem(Score2PerfProblem):
             steps_per_quarter=4, min_pitch=MIN_PITCH, max_pitch=MAX_PITCH))
     ]
 
+@registry.register_problem('score2perf_americana')
+class Score2PerfAmericana(Score2PerfProblem):
+  """Piano performance language model on the Americana dataset."""
+
+  def performances_input_transform(self, tmp_dir):
+    del tmp_dir
+    return _maestro_input_transform()
+
+  @property
+  def splits(self):
+    return None
+
+  @property
+  def min_hop_size_seconds(self):
+    return 0.0
+
+  @property
+  def max_hop_size_seconds(self):
+    return 0.0
+
+  @property
+  def add_eos_symbol(self):
+    return False
+
+  @property
+  def stretch_factors(self):
+    # Stretch by -5%, -2.5%, 0%, 2.5%, and 5%.
+    return [0.95, 0.975, 1.0, 1.025, 1.05]
+
+  @property
+  def transpose_amounts(self):
+    # Transpose no more than a minor third.
+    return [-3, -2, -1, 0, 1, 2, 3]
+
+  @property
+  def random_crop_in_train(self):
+    return True
+
+  @property
+  def split_in_eval(self):
+    return True
 
 @registry.register_problem('score2perf_maestro_language_uncropped_aug')
 class Score2PerfMaestroLanguageUncroppedAug(Score2PerfProblem):
